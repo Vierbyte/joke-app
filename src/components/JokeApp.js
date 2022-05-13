@@ -4,28 +4,34 @@ class JokeApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            joke: ''
+            joke: '',
+            isLoading: false
         };
     }
     render() {
         return (
             <div>
-                <p>{this.state.joke}</p>
+                <p>{this.state.isLoading ? "Loading..." : this.state.joke}</p>
                 <button onClick={this._fetchJoke}>New Joke</button>
             </div>
         );
     }
     _fetchJoke = () => {
-        const url = 'https://api.chucknorris.io/jokes/random?category=dev';
-        fetch(url)
-            .then((response) => response.json())
-            .then(jokeJson => {
-                this.setState({ 
-                    joke: jokeJson.value,
-                }, () => {
-                    console.log('New Joke stored')
-                })
+        this.setState({
+            isLoading: true,
+        }, () => {
+            const url = 'https://api.chucknorris.io/jokes/random?category=dev';
+            fetch(url)
+                .then((response) => response.json())
+                .then(jokeJson => {
+                    this.setState({ 
+                        joke: jokeJson.value,
+                        isLoading: false
+                    }, () => {
+                        console.log('New Joke stored');
+                    });
             })
+        })
     }
 }
 
